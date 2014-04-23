@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  h1= "hue server demo"
+
+  // Wrapper
+  #wrapper
+    // ADD USER
+    h3 Light
+    #light1.light
+      | Brightness 1<input id="inputBright1" type="range" name="brightness" min="1" max="255" step="10">255
+      br
+      | Saturate 1<input id="inputSat1" type="range" name="satuate" min="1" max="255" step="10">255
+      br 
+      | Color 1<input id="inputColor1" type="range" name="color" min="1" max="65535" step="1000">65535
+      br
+      button#btnSetLight1(onclick="setHue1()") Set Light 1
+    br
+    #light2.light
+      | Brightness 1<input id="inputBright2" type="range" name="brightness" min="1" max="255" step="10">255
+      br
+      | Saturate 1<input id="inputSat2" type="range" name="satuate" min="1" max="255" step="10">255
+      br 
+      | Color 1<input id="inputColor2" type="range" name="color" min="1" max="65535" step="1000">65535
+      br
+      button#btnSetLight1(onclick="setHue2()") Set Light 2
+    br
+    #light3.light
+      | Brightness 1<input id="inputBright3" type="range" name="brightness" min="1" max="255" step="10">255
+      br
+      | Saturate 1<input id="inputSat3" type="range" name="satuate" min="1" max="255" step="10">255
+      br 
+      | Color 1<input id="inputColor3" type="range" name="color" min="1" max="65535" step="1000">65535
+      br
+      button#btnSetLight1(onclick="setHue3()") Set Light 3
+    // /ADD USER
+
+
+  // /WRAPPER

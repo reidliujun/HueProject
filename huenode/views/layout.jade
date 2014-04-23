@@ -1,0 +1,17 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(type="text/javascript", src='/javascripts/app.js')
+    script(type="text/javascript", src='/javascripts/jquery-1.11.0.min.js')
+    script(type='text/javascript').
+        console.log("test");
+        $(document).ready(function(){
+            $("h3").click(function(){
+                $(".light").toggle();
+            });
+        });
+  body
+    block content
+
