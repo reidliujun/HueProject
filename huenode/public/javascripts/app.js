@@ -45,3 +45,57 @@ function setHue3(){
     http.open("PUT",lights,true);
     http.send(message);
 }
+
+/**
+* Acceleremoter tests
+*/
+function accelerometerInit(){
+
+    var has_touch = 'ontouchstart' in document.documentElement;
+
+    // Position and orientation variables
+    var x1 = 0, y1 = 0, z1 = 0, x2 = 0, y2 = 0, z2 = 0;
+    var alpha1 = 0, beta1 = 0, gamma1 = 0, alpha2 = 0, beta2 = 0, gamma2 = 0;
+
+    if(has_touch) {   
+        window.addEventListener('devicemotion', capture_motion, false);
+        window.addEventListener('deviceorientation', capture_orientation, false);
+    }   
+
+    function capture_orientation (event) {
+        var sensitivity = 25;
+
+         alpha1 = event.alpha;
+         beta1 = event.beta;
+         gamma1 = event.gamma;
+
+         var change = Math.abs(alpha1-alpha2+beta1-beta2+gamma1-gamma2);
+
+         if (change > sensitivity) {
+            console.log('Orientation - Alpha: '+alpha1+', Beta: '+beta1+', Gamma: '+gamma1);
+        }
+
+        alpha2 = alpha1;
+        beta2 = beta1;
+        gamma2 = gamma1;
+    }
+
+    function capture_motion() {    
+        var sensitivity = 5;        
+        x1 = event.acceleration.x;  
+        y1 = event.acceleration.y;  
+        z1 = event.acceleration.z;        
+
+        var change = Math.abs(x1-x2+y1-y2+z1-z2);
+
+        if (change > sensitivity) {
+           console.log("Motion x: "+x1+", y: "+y1,", z: "+z1); 
+        }
+
+        // Update new position
+        x2 = x1;
+        y2 = y1;
+        z2 = z1;
+        
+    }   
+}
