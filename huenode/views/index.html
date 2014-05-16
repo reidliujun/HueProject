@@ -32,7 +32,11 @@
 	$("h3").click(function(){
 			$(".light").toggle();
 		});
-		accelerometerInit();
+
+		// Only when tab2 is selected
+		patternsInit();
+		// Remove events when tab2 is not selected
+		//patternsStop();
 	</script>
 </head> 
 <body>
