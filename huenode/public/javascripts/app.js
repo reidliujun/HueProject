@@ -374,12 +374,168 @@ function patternsStop(){
 * Free-motion Tab
 */
 
+var alphaFree;
+var betaFree;
+var gammaFree;
+var accelerationFree;
+var instanceFree = 1;
+
 function freeMotionInit(){
+
+    var has_touch = 'ontouchstart' in document.documentElement;
+
+    // Position and orientation variables
+    var x1 = 0, y1 = 0, z1 = 0, x2 = 0, y2 = 0, z2 = 0;
+    var alpha1 = 0, beta1 = 0, gamma1 = 0, alpha2 = 0, beta2 = 0, gamma2 = 0;
+    var orientationChange = false;
+    var accelerationChange = false;
+
+    if(has_touch) {   
+        window.addEventListener('devicemotion', capture_motion_free, false);
+        window.addEventListener('deviceorientation', capture_orientation_free, false);
+    }   
+
+    function capture_orientation_free (event) {
+        var sensitivity = 10; // Degree
+
+         alpha1 = event.alpha;
+         beta1 = event.beta;
+         gamma1 = event.gamma;
+
+         var motionObject;
+
+         // Detect left-right movements
+        var changeAlpha = alpha1-alpha2;
+        if (Math.abs(changeAlpha) > sensitivity) {
+            orientationChange = true;
+            alphaFree = alpha1;
+            triggerMotionFree();
+        } else {
+            orientationChange = false;
+        }
+
+         // Detect up-down movements
+         var changeBeta = beta1-beta2;
+         if (Math.abs(changeBeta) > sensitivity) {
+            orientationChange = true;
+            betaFree = beta1;
+            triggerMotionFree();
+        } else {
+            orientationChange = false;
+        }
+
+        // Detect rotation movements
+        var changeGamma = gamma1-gamma2;
+        if (Math.abs(changeGamma) > sensitivity) {
+            orientationChange = true;
+            gammaFree = gamma1;
+            triggerMotionFree();
+        } else {
+            orientationChange = false;
+        }
+
+        alpha2 = alpha1;
+        beta2 = beta1;
+        gamma2 = gamma1;
+    }
+
+    function capture_motion_free() {    
+        var sensitivity = 5;  // m/s2     
+        x1 = event.accelerationIncludingGravity.x;  
+        y1 = event.accelerationIncludingGravity.y;  
+        z1 = event.accelerationIncludingGravity.z;        
+
+        var change = Math.abs(x1-x2+y1-y2+z1-z2);
+
+        if (change > sensitivity) {
+            accelerationChange = true;
+            accelerationFree = change;
+            triggerMotionFree();
+        } else {
+            accelerationChange = false;
+        }
+
+        // Update new position
+        x2 = x1;
+        y2 = y1;
+        z2 = z1;
+        
+    }  
+
+    function triggerMotionFree(){
+        if(orientationChange && accelerationChange){   
+            var hue = degreeToHUE(alphaFree, betaFree, gammaFree);
+
+            // Min acceleration 5 m/s2 -> 0
+            // Max acceleration 20 m/s2 -> 15
+            var accelerationAdjustment = accelerationFree - 5;
+
+            // Min brightness 75
+            // Max brightness 255
+            var range = 75 + (accelerationAdjustment * 8.5);
+            if(range > 255){ range = 255; }
+            if(range < 0){ range = 0; }
+            var brightness = range;
+            var saturation = range;
+
+            /*
+            console.log("Hue: "+hue);
+            console.log("Brightness: "+brightness);
+            console.log("Saturation: "+saturation);
+            console.log(" --- ");
+            */
+
+            // Light 1
+            var http = new XMLHttpRequest();
+            var message = '{"on":true, "sat":'+saturation+', "bri":'+brightness+',"hue":'+hue+'}';
+            
+            setInterval(function(){
+                if(instanceFree > 3) instanceFree = 1;
+                var lightsAPIURL = ip + "/api/newdeveloper/lights/"+instanceFree+"/state"; 
+                http.open("PUT",lightsAPIURL,true);
+                http.send(message);
+                console.log(message);
+                instanceFree += 1;
+            },3000);
+            
+        }
+    }
+
+    function degreeToHUE(alpha, beta, gamma){
+        var r = Math.abs(alpha) / 360;
+        var g = Math.abs(beta) / 90;
+        var b = Math.abs(gamma) / 180;
+        var h = 0;
+
+        var min = Math.min(r, g, b);
+        var max = Math.max(r, g, b);
+        var delta = max - min;
+
+        if(r == max){
+            h = (g - b) / delta; // between yellown and magenta
+        } else if (g == max){
+            h = 2 + (b - r) / delta; // between cyan and yellown
+        } else if (b == max){
+            h = 4 + (r - g) / delta; // between magenta and cyan
+        }
+
+        // Degrees
+        h *= 60;
+        if(h < 0){
+            h += 360;
+        }
+
+        // Degrees to HUE
+        h *= 182;
+
+        return Math.round(h);
+    }
 
 }
 
 function freeMotionStop(){
-    
+    window.removeEventListener('devicemotion', capture_motion_free, false);
+    window.removeEventListener('deviceorientation', capture_orientation_free, false);
 }
 
 // General functions
