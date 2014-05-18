@@ -16,8 +16,18 @@
     <script src="/javascripts/free_motion.js"></script>
 	<script src="/javascripts/jquery.min.js"></script>
 	<script src="/javascripts/jquery.minicolors.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
 	<script>
+	//Establish the socket with server
+	var socket = io.connect('http://localhost.foo.fi');
+	//get response from server
+	socket.on('hue_server_rep', function (data) {
+		console.log(data);
+	});
+	
 	$(document).ready( function() {		
+			
+
             $('.demo').each( function() {
 				$(this).minicolors({
 					control: $(this).attr('data-control') || 'hue',
@@ -34,6 +44,8 @@
 		$("h3").click(function(){
 			$(".light").toggle();
 		});
+
+
 	</script>
 </head> 
 <body>

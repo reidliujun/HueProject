@@ -2,9 +2,11 @@
 //The config url of the hue is: http://<bridge ip address>/debug/clip.html
 //in the following case with the ip, it can be: http://192.168.1.100/debug/clip.html
 
-var ip = "http://192.168.1.100";
-var tmp;
-var lightsNumber = 3;
+
+
+
+
+
 
 /***********************************************************
 * REFERENCE:http://snipplr.com/view.php?codeview&id=37974  *
@@ -57,52 +59,27 @@ function getHUE(rgbc){
     return Math.round(h);
 }
 
+// Send put request to socket of the server
+function putParameter(id, saturate, bright, huecolor){
+    socket.emit('hue_para', {light_idx:id, "sat": saturate, "bri": bright, "hue": huecolor });
+}
+
+
 function setHue1(){
-    var color = $("#inputColor1").val();
-    var brightness = $("#inputBright1").val();
-    var inputSat = $("#inputSat1").val();
-	var rgbc = hexToRGB(color);
-    var hue = getHUE(rgbc);
-	var lightsAPIURL = ip + "/api/newdeveloper/lights/1/state";
-	var http = new XMLHttpRequest();
-
-	var message = '{"on":true, "sat":'+inputSat+', "bri":'+brightness+',"hue":'+hue+'}';
-
-    console.log(message);
-
-	http.open("PUT",lightsAPIURL,true);
-	http.send(message);
+    var rgb1 = hexToRGB($("#inputColor1").val());
+    putParameter("1", parseInt($("#inputSat1").val()), parseInt($("#inputBright1").val()), getHUE(rgb1));
 }
 
 
 function setHue2(){
-
-    var color = $("#inputColor2").val();
-    var brightness = $("#inputBright2").val();
-    var inputSat = $("#inputSat2").val();
-	var rgbc =hexToRGB(color);
-    var hue = getHUE(rgbc);
-    var lightsAPIURL = ip + "/api/newdeveloper/lights/2/state";
-    var http = new XMLHttpRequest();
-
-    var message = '{"on":true, "sat":'+inputSat+', "bri":'+brightness+',"hue":'+hue+'}';
-    http.open("PUT",lightsAPIURL,true);
-    http.send(message);
+    var rgb2 = hexToRGB($("#inputColor2").val());
+    putParameter("2", parseInt($("#inputSat2").val()), parseInt($("#inputBright2").val()), getHUE(rgb2));
+    
 }
 
 function setHue3(){
-
-    var color = $("#inputColor3").val();
-    var brightness = $("#inputBright3").val();
-    var inputSat = $("#inputSat3").val();
-	var rgbc =hexToRGB(color);
-    var hue = getHUE(rgbc);
-    var lightsAPIURL = ip + "/api/newdeveloper/lights/3/state";
-    var http = new XMLHttpRequest();
-
-    var message = '{"on":true, "sat":'+inputSat+', "bri":'+brightness+',"hue":'+hue+'}';
-    http.open("PUT",lightsAPIURL,true);
-    http.send(message);
+    var rgb3 = hexToRGB($("#inputColor3").val());
+    putParameter("3", parseInt($("#inputSat3").val()), parseInt($("#inputBright3").val()), getHUE(rgb3));
 }
 
 
