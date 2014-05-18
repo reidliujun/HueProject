@@ -18,8 +18,8 @@
 	<script src="/javascripts/jquery.minicolors.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
-	//Establish the socket with server
-	var socket = io.connect('http://localhost.foo.fi');
+	//Establish the socket with server, since no domain name has been set, hard coded Ip has to be used
+	var socket = io.connect('http://192.168.1.102');
 	//get response from server
 	socket.on('hue_server_rep', function (data) {
 		console.log(data);
