@@ -24,3 +24,10 @@ The reference url is listed as follows:
 [Light API](http://developers.meethue.com/1_lightsapi.html)
 
 
+The extra node module used in the project
+------------------------------------------
+[node-XMLHttpRequest](https://github.com/driverdan/node-XMLHttpRequest)
+[socket io](http://socket.io/)
+
+
+
