@@ -192,54 +192,61 @@ function OnOffWithMotion(event){
         if(typeof lights.light3 !== "undefined"){ currentLightState3 = lights.light3; }      
 
         if(checkboxLight1){
-            var lightsAPIURL1 = ip + "/api/newdeveloper/lights/1/state";
-            var message1 = '{"on":false}';
-            http.open("PUT",lightsAPIURL1,true);
-            http.send(message1);
-            console.log(message1);
+            // var lightsAPIURL1 = ip + "/api/newdeveloper/lights/1/state";
+            // var message1 = '{"on":false}';
+            // http.open("PUT",lightsAPIURL1,true);
+            // http.send(message1);
+            // console.log(message1);
+            putParameter("1", currentLightState1.state.sat, currentLightState1.state.bri, currentLightState1.state.hue, false);
         }
 
         if(checkboxLight2){
-            var lightsAPIURL2 = ip + "/api/newdeveloper/lights/2/state";
-            var message2 = '{"on":false}';
-            http.open("PUT",lightsAPIURL2,true);
-            http.send(message2);
-            console.log(message2);
+            // var lightsAPIURL2 = ip + "/api/newdeveloper/lights/2/state";
+            // var message2 = '{"on":false}';
+            // http.open("PUT",lightsAPIURL2,true);
+            // http.send(message2);
+            // console.log(message2);
+            putParameter("2", currentLightState2.state.sat, currentLightState2.state.bri, currentLightState2.state.hue, false);
         }
 
         if(checkboxLight3){
-            var lightsAPIURL3 = ip + "/api/newdeveloper/lights/3/state";
-            var message3 = '{"on":false}';
-            http.open("PUT",lightsAPIURL3,true);
-            http.send(message3);
-            console.log(message3);
+            // var lightsAPIURL3 = ip + "/api/newdeveloper/lights/3/state";
+            // var message3 = '{"on":false}';
+            // http.open("PUT",lightsAPIURL3,true);
+            // http.send(message3);
+            // console.log(message3);
+
+            putParameter("3", currentLightState3.state.sat, currentLightState3.state.bri, currentLightState3.state.hue, false);
         }
     } else { // Lights go on
         // Light1
         if(checkboxLight1){
-            var lightsAPIURL1 = ip + "/api/newdeveloper/lights/1/state";
-            var message1 = '{"on":true, "sat":'+currentLightState1.state.sat+', "bri":'+currentLightState1.state.bri+', "hue":'+currentLightState1.state.hue+'}';         
-            http.open("PUT",lightsAPIURL1,true);
-            http.send(message1);
-            console.log(message1);
+            // var lightsAPIURL1 = ip + "/api/newdeveloper/lights/1/state";
+            // var message1 = '{"on":true, "sat":'+currentLightState1.state.sat+', "bri":'+currentLightState1.state.bri+', "hue":'+currentLightState1.state.hue+'}';         
+            // http.open("PUT",lightsAPIURL1,true);
+            // http.send(message1);
+            // console.log(message1);
+            putParameter("1", currentLightState1.state.sat, currentLightState1.state.bri, currentLightState1.state.hue, true);
         }
 
         // Light2
         if(checkboxLight2){
-            var lightsAPIURL2 = ip + "/api/newdeveloper/lights/2/state";
-            var message2 = '{"on":true, "sat":'+currentLightState2.state.sat+', "bri":'+currentLightState2.state.bri+', "hue":'+currentLightState2.state.hue+'}';         
-            http.open("PUT",lightsAPIURL2,true);
-            http.send(message2);
-            console.log(message2);
+            // var lightsAPIURL2 = ip + "/api/newdeveloper/lights/2/state";
+            // var message2 = '{"on":true, "sat":'+currentLightState2.state.sat+', "bri":'+currentLightState2.state.bri+', "hue":'+currentLightState2.state.hue+'}';         
+            // http.open("PUT",lightsAPIURL2,true);
+            // http.send(message2);
+            // console.log(message2);
+            putParameter("2", currentLightState2.state.sat, currentLightState2.state.bri, currentLightState2.state.hue, true);
         }
 
         // Light3
         if(checkboxLight3){
-            var lightsAPIURL3 = ip + "/api/newdeveloper/lights/3/state";
-            var message3 = '{"on":true, "sat":'+currentLightState3.state.sat+', "bri":'+currentLightState3.state.bri+', "hue":'+currentLightState3.state.hue+'}';         
-            http.open("PUT",lightsAPIURL3,true);
-            http.send(message3);
-            console.log(message3);
+            // var lightsAPIURL3 = ip + "/api/newdeveloper/lights/3/state";
+            // var message3 = '{"on":true, "sat":'+currentLightState3.state.sat+', "bri":'+currentLightState3.state.bri+', "hue":'+currentLightState3.state.hue+'}';         
+            // http.open("PUT",lightsAPIURL3,true);
+            // http.send(message3);
+            // console.log(message3);
+            putParameter("3", currentLightState3.state.sat, currentLightState3.state.bri, currentLightState3.state.hue, true);
         }
     }
 }
@@ -261,7 +268,7 @@ function changeColorWithMotion(event){
 
     if(checkboxLight1){
         // Light 1
-        var lightsAPIURL1 = ip + "/api/newdeveloper/lights/1/state";        
+        // var lightsAPIURL1 = ip + "/api/newdeveloper/lights/1/state";        
         var saturation1 = currentLightState1.state.sat; 
         var brightness1 = currentLightState1.state.bri; 
         var hue1 = currentLightState1.state.hue; 
@@ -278,15 +285,16 @@ function changeColorWithMotion(event){
             }
         }
 
-        var message1 = '{"on":true, "sat":'+saturation1+', "bri":'+brightness1+', "hue":'+hue1+'}';
-        http.open("PUT",lightsAPIURL1,true);
-        http.send(message1);
-        console.log("light1: "+message1);
+        // var message1 = '{"on":true, "sat":'+saturation1+', "bri":'+brightness1+', "hue":'+hue1+'}';
+        // http.open("PUT",lightsAPIURL1,true);
+        // http.send(message1);
+        // console.log("light1: "+message1);
+        putParameter("1", saturation1, brightness1, hue1, true);
     }
 
     if(checkboxLight2){
         // Light 2
-        var lightsAPIURL2 = ip + "/api/newdeveloper/lights/2/state";        
+        // var lightsAPIURL2 = ip + "/api/newdeveloper/lights/2/state";        
         var saturation2 = currentLightState2.state.sat; 
         var brightness2 = currentLightState2.state.bri; 
         var hue2 = currentLightState2.state.hue; 
@@ -303,15 +311,16 @@ function changeColorWithMotion(event){
             }
         }
 
-        var message2 = '{"on":true, "sat":'+saturation2+', "bri":'+brightness2+',"hue":'+hue2+'}';
-        http.open("PUT",lightsAPIURL2,true);
-        http.send(message2);
-        console.log("light2: "+message2);
+        // var message2 = '{"on":true, "sat":'+saturation2+', "bri":'+brightness2+',"hue":'+hue2+'}';
+        // http.open("PUT",lightsAPIURL2,true);
+        // http.send(message2);
+        // console.log("light2: "+message2);
+        putParameter("2", saturation2, brightness2, hue2, true);
     }
 
     if(checkboxLight3){
         // Light 3
-        var lightsAPIURL3 = ip + "/api/newdeveloper/lights/3/state";        
+        // var lightsAPIURL3 = ip + "/api/newdeveloper/lights/3/state";        
         var saturation3 = currentLightState3.state.sat; 
         var brightness3 = currentLightState3.state.bri; 
         var hue3 = currentLightState3.state.hue; 
@@ -328,33 +337,79 @@ function changeColorWithMotion(event){
             }
         }
 
-        var message3 = '{"on":true, "sat":'+saturation3+', "bri":'+brightness3+',"hue":'+hue3+'}';
-        http.open("PUT",lightsAPIURL3,true);
-        http.send(message3);
-        console.log("light3: "+message3);
+        // var message3 = '{"on":true, "sat":'+saturation3+', "bri":'+brightness3+',"hue":'+hue3+'}';
+        // http.open("PUT",lightsAPIURL3,true);
+        // http.send(message3);
+        putParameter("3", saturation3, brightness3, hue3, true);
+        // console.log("light3: "+message3);
     }
 }
 
+// function getLights(){
+//     var light1, light2, light3;
+
+//     for(var i = 1; i <= lightsNumber; i++){
+//         var lightsAPIURL = ip + "/api/newdeveloper/lights/"+i; 
+//         var http = new XMLHttpRequest();
+//         http.open("GET",lightsAPIURL,true);
+//         http.send();
+
+//         http.onreadystatechange=function(){
+//           if (http.readyState==4 && http.status==200){
+//                 switch(i){
+//                     case 1: light1 = http.responseText; break;
+//                     case 2: light2 = http.responseText; break;
+//                     case 3: light3 = http.responseText; break;
+//                 }                
+//             }
+//         }
+//     }
+
+//     var object = {"light1":light1, "light2":light2, "light3":light3};
+//     return object;    
+// }
+
+
 function getLights(){
     var light1, light2, light3;
+    // for(var i = 1; i <= lightsNumber; i++){
+    //     var lightsAPIURL = ip + "/api/newdeveloper/lights/"+i; 
+    //     var http = new XMLHttpRequest();
+    //     http.open("GET",lightsAPIURL,true);
+    //     http.send();
+    //     // putParameter(i.toString(), saturation, brightness, hue, true);
 
-    for(var i = 1; i <= lightsNumber; i++){
-        var lightsAPIURL = ip + "/api/newdeveloper/lights/"+i+"/state"; 
-        var http = new XMLHttpRequest();
-        http.open("GET",lightsAPIURL,true);
-        http.send();
+    //     http.onreadystatechange=function(){
+    //       if (http.readyState==4 && http.status==200){
+    //             switch(i){
+    //                 case 1: light1 = http.responseText; break;
+    //                 case 2: light2 = http.responseText; break;
+    //                 case 3: light3 = http.responseText; break;
+    //             }                
+    //         }
+    //     }
+    // }
+    socket.emit('hue_state', "1", function(data){
+        light1 = data;
+    });
 
-        http.onreadystatechange=function(){
-          if (http.readyState==4 && http.status==200){
-                switch(i){
-                    case 1: light1 = http.responseText; break;
-                    case 2: light2 = http.responseText; break;
-                    case 3: light3 = http.responseText; break;
-                }                
-            }
-        }
-    }
+    socket.emit('hue_state', "2", function(data){
+        light2 = data;
+    });
+    socket.emit('hue_state', "3", function(data){
+        light3 = data;
+    });
+    
+    console.log("light3:");
+    console.log(light3);
+
+    socket.on('hue_state_res', function (data) {
+        // console.log(data);
+    });
 
     var object = {"light1":light1, "light2":light2, "light3":light3};
+    console.log("getlights state");
+    console.log(object);
+    // lights.light1.state.sat
     return object;    
 }

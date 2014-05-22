@@ -50,31 +50,55 @@ app.get('/', function (req, res) {
 
 // set connection socket between server and client.
 io.sockets.on('connection', function (socket) {
+
+  // send PUT to hue bridge
   socket.on('hue_para', function (data) {
-
-
-    xhr.onreadystatechange = function() {
-      sys.puts("State: " + this.readyState);
-
-      if (this.readyState == 4) {
-        sys.puts("Complete.\nBody length: " + this.responseText.length);
-        sys.puts("Body:\n" + this.responseText);
-      }
-    };
-
-    //send parameter to the bridge
     setLight(data);
     //respond to the client
-    socket.emit('hue_server_rep', { status: 'send command to hue' });
+    // socket.emit('hue_server_res', { status: 'send command to hue' });
   });
+
+  //get the light state with its ID 
+  socket.on('hue_state',function(id, fn){
+    console.log(id);
+    var options = {
+      host: '192.168.1.100',
+      port: 80,
+      path: '/api/newdeveloper/lights/'+id
+    };
+    var state;
+    http.get(options, function(res) {
+      var body = '';
+      res.on('data', function(chunk) {
+        body += chunk;
+      });
+      res.on('end', function() {
+        state = JSON.parse(body);
+        console.log("state");
+        console.log(state);
+        fn(state);
+        // socket.emit('hue_state_res', state);
+      });
+    }).on('error', function(e) {
+      console.log("Got error: " + e.message);
+    });
+  });
+
 });
 
+xhr.onreadystatechange = function() {
+  sys.puts("State: " + this.readyState);
+  if (this.readyState == 4) {
+    sys.puts("Complete.\nBody length: " + this.responseText.length);
+    sys.puts("Body:\n" + this.responseText);
+  }
+};
 
 function setLight(data){
   
   var ip = "http://192.168.1.100";
   var lights = ip + "/api/newdeveloper/lights/"+data["light_idx"]+"/state";
-  data["on"]=true;
+  // data["on"]=true;
   var message = data;
   delete message.light_idx;
   console.log("lights ip is:");
@@ -83,6 +107,7 @@ function setLight(data){
   console.log(message);
   xhr.open("PUT",lights,true);
   xhr.send(JSON.stringify(message));
-
 }
+
+
 

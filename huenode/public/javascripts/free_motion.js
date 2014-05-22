@@ -11,6 +11,7 @@ var gammaFreeMotion;
 var accelerationFreeMotion;
 var activeLightInstance = 1;
 var reduceLightLevelsInterval;
+var ip ="http://192.168.1.100"
 
 function toggleFreeMotion(){
     var state = $('#freemotionslider').val();    
@@ -47,34 +48,46 @@ function freeMotionStop(){
 }
 
 function reduceLightLevels(){
-    var lights = getLights();
+    // var lights = getLights();
     // Send messages to lights
-    var http = new XMLHttpRequest();
-    var level1 = (level1 >= 125) ? (lights.light1.state.sat - 10) : 125;
-    var level2 = (level2 >= 125) ? (lights.light2.state.sat - 10) : 125;
-    var level3 = (level3 >= 125) ? (lights.light3.state.sat - 10) : 125;
-
+    // var http = new XMLHttpRequest();
+    // var level1 = (level1 >= 125) ? (lights.light1.state.sat - 10) : 125;
+    // var level2 = (level2 >= 125) ? (lights.light2.state.sat - 10) : 125;
+    // var level3 = (level3 >= 125) ? (lights.light3.state.sat - 10) : 125;
+    var level1 = 255;
+    var level2 = 255;
+    var level3 = 255;
     var message1 = '{"on":true, "sat":'+level1+', "bri":'+level1+'}';
     var message2 = '{"on":true, "sat":'+level2+', "bri":'+level2+'}';
     var message3 = '{"on":true, "sat":'+level3+', "bri":'+level3+'}';
    
     // Light 1
-    var lightsAPIURL1 = ip + "/api/newdeveloper/lights/1/state"; 
-    http.open("PUT",lightsAPIURL1,true);
-    http.send(message1);
-    console.log(message1);
+    // var lightsAPIURL1 = ip + "/api/newdeveloper/lights/1/state"; 
+    // http.open("PUT",lightsAPIURL1,true);
+    // http.send(message1);
+    // console.log(message1);
+    console.log("level1:");
+    console.log(level1);
+    putParameter("1", level1, level1, "null", true);
 
     // Light 2
-    var lightsAPIURL2 = ip + "/api/newdeveloper/lights/2/state"; 
-    http.open("PUT",lightsAPIURL2,true);
-    http.send(message2);
-    console.log(message2);
+    // var lightsAPIURL2 = ip + "/api/newdeveloper/lights/2/state"; 
+    // http.open("PUT",lightsAPIURL2,true);
+    // http.send(message2);
+    // console.log(message2);
+    console.log("level2:");
+    console.log(level2);
+    putParameter("2", level2, level2, "null", true);
 
     // Light 3
-    var lightsAPIURL3 = ip + "/api/newdeveloper/lights/3/state"; 
-    http.open("PUT",lightsAPIURL3,true);
-    http.send(message3);
-    console.log(message3);
+    // var lightsAPIURL3 = ip + "/api/newdeveloper/lights/3/state"; 
+    // http.open("PUT",lightsAPIURL3,true);
+    // http.send(message3);
+    // console.log(message3);
+    // putParameter("3", level3, level3, 30000, true);
+    console.log("level3:");
+    console.log(level3);
+    putParameter("3", level3, level3, "null", true);
 }
 
 function captureOrientationFree (event) {
@@ -168,16 +181,16 @@ function triggerMotionFree(){
         */
 
         // Send messages to lights
-        var http = new XMLHttpRequest();
-        var message = '{"on":true, "sat":'+saturation+', "bri":'+brightness+',"hue":'+hue+'}';
+        // var http = new XMLHttpRequest();
+        // var message = '{"on":true, "sat":'+saturation+', "bri":'+brightness+',"hue":'+hue+'}';
        
         if(activeLightInstance > 3) activeLightInstance = 1;
-        var lightsAPIURL = ip + "/api/newdeveloper/lights/"+activeLightInstance+"/state"; 
-        http.open("PUT",lightsAPIURL,true);
-        http.send(message);
-        console.log(message);
+        // var lightsAPIURL = ip + "/api/newdeveloper/lights/"+activeLightInstance+"/state"; 
+        // http.open("PUT",lightsAPIURL,true);
+        // http.send(message);
+        // console.log(message);
+        putParameter(activeLightInstance.toString(), saturation, brightness, hue, true);
         activeLightInstance += 1;
-        
     }
 }
 
@@ -213,24 +226,41 @@ function degreeToHUE(alpha, beta, gamma){
 
 function getLights(){
     var light1, light2, light3;
+    // for(var i = 1; i <= lightsNumber; i++){
+    //     var lightsAPIURL = ip + "/api/newdeveloper/lights/"+i; 
+    //     var http = new XMLHttpRequest();
+    //     http.open("GET",lightsAPIURL,true);
+    //     http.send();
+    //     // putParameter(i.toString(), saturation, brightness, hue, true);
 
-    for(var i = 1; i <= lightsNumber; i++){
-        var lightsAPIURL = ip + "/api/newdeveloper/lights/"+i+"/state"; 
-        var http = new XMLHttpRequest();
-        http.open("GET",lightsAPIURL,true);
-        http.send();
-
-        http.onreadystatechange=function(){
-          if (http.readyState==4 && http.status==200){
-                switch(i){
-                    case 1: light1 = http.responseText; break;
-                    case 2: light2 = http.responseText; break;
-                    case 3: light3 = http.responseText; break;
-                }                
-            }
-        }
-    }
+    //     http.onreadystatechange=function(){
+    //       if (http.readyState==4 && http.status==200){
+    //             switch(i){
+    //                 case 1: light1 = http.responseText; break;
+    //                 case 2: light2 = http.responseText; break;
+    //                 case 3: light3 = http.responseText; break;
+    //             }                
+    //         }
+    //     }
+    // }
+    socket.emit('hue_state', "1", function(data){
+        light1 = data;
+    });
+    
+    socket.emit('hue_state', "2", function(data){
+        light2 = data;
+    });
+    socket.emit('hue_state', "3", function(data){
+        light3 = data;
+    });
 
     var object = {"light1":light1, "light2":light2, "light3":light3};
+    console.log("getlights state");
+    console.log(object);
+    // lights.light1.state.sat
     return object;    
 }
+
+
+
+

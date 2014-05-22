@@ -19,10 +19,13 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
 	//Establish the socket with server, since no domain name has been set, hard coded Ip has to be used
-	var socket = io.connect('http://192.168.1.102');
+	var socket = io.connect('http://localhost.foo.fi'); //server IP http://192.168.1.101 or http://localhost.foo.fi
 	//get response from server
-	socket.on('hue_server_rep', function (data) {
-		console.log(data);
+	// socket.on('hue_server_rep', function (data) {
+	// 	console.log(data);
+	// });
+	socket.on('hue_state_res', function (data) {
+		// console.log(data);
 	});
 	
 	$(document).ready( function() {		

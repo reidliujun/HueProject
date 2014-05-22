@@ -60,26 +60,45 @@ function getHUE(rgbc){
 }
 
 // Send put request to socket of the server
-function putParameter(id, saturate, bright, huecolor){
-    socket.emit('hue_para', {light_idx:id, "sat": saturate, "bri": bright, "hue": huecolor });
+function putParameter(id, saturate, bright, huecolor, on){
+    if(huecolor=="null"){
+        socket.emit('hue_para', {light_idx:id, "sat": saturate, "bri": bright, "on": on});
+    }
+    else{
+        socket.emit('hue_para', {light_idx:id, "sat": saturate, "bri": bright, "hue": huecolor, "on": on});
+    }
+    
 }
 
 
 function setHue1(){
     var rgb1 = hexToRGB($("#inputColor1").val());
-    putParameter("1", parseInt($("#inputSat1").val()), parseInt($("#inputBright1").val()), getHUE(rgb1));
+    putParameter("1", parseInt($("#inputSat1").val()), parseInt($("#inputBright1").val()), getHUE(rgb1), true);
 }
 
 
 function setHue2(){
     var rgb2 = hexToRGB($("#inputColor2").val());
-    putParameter("2", parseInt($("#inputSat2").val()), parseInt($("#inputBright2").val()), getHUE(rgb2));
+    putParameter("2", parseInt($("#inputSat2").val()), parseInt($("#inputBright2").val()), getHUE(rgb2), true);
     
 }
 
 function setHue3(){
     var rgb3 = hexToRGB($("#inputColor3").val());
-    putParameter("3", parseInt($("#inputSat3").val()), parseInt($("#inputBright3").val()), getHUE(rgb3));
+    putParameter("3", parseInt($("#inputSat3").val()), parseInt($("#inputBright3").val()), getHUE(rgb3), true);
+    putParameter("2", parseInt($("#inputSat3").val()), parseInt($("#inputBright3").val()), getHUE(rgb3), true);
 }
+
+function socketTest(){
+    // socket.emit('hue_state', {"id": "3"});
+    var light3; 
+    socket.emit('hue_state', "3", function(data){
+        light3 = data;
+        console.log(light3);
+    });
+
+}
+
+
 
 
