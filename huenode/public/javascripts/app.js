@@ -86,7 +86,7 @@ function setHue2(){
 function setHue3(){
     var rgb3 = hexToRGB($("#inputColor3").val());
     putParameter("3", parseInt($("#inputSat3").val()), parseInt($("#inputBright3").val()), getHUE(rgb3), true);
-    putParameter("2", parseInt($("#inputSat3").val()), parseInt($("#inputBright3").val()), getHUE(rgb3), true);
+    //putParameter("2", parseInt($("#inputSat3").val()), parseInt($("#inputBright3").val()), getHUE(rgb3), true);
 }
 
 function socketTest(){

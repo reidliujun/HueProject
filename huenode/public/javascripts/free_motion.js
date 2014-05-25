@@ -11,7 +11,31 @@ var gammaFreeMotion;
 var accelerationFreeMotion;
 var activeLightInstance = 1;
 var reduceLightLevelsInterval;
-var ip ="http://192.168.1.100"
+var lightsNumber = 3;
+
+var currentLightState1 = {
+    "state": {
+        "hue": 0,
+        "bri": 255,
+        "sat": 255
+    }
+};
+var currentLightState2 = {
+    "state": {
+        "hue": 0,
+        "bri": 255,
+        "sat": 255
+    }
+};
+var currentLightState3 = {
+    "state": {
+        "hue": 0,
+        "bri": 255,
+        "sat": 255
+    }
+};
+
+var lightsObject = {"light1":currentLightState1, "light2":currentLightState2, "light3":currentLightState3};
 
 function toggleFreeMotion(){
     var state = $('#freemotionslider').val();    
@@ -38,7 +62,7 @@ function freeMotionInit(){
 
     reduceLightLevelsInterval = window.setInterval(function(){
         reduceLightLevels();
-    }, 2000);
+    }, 5000);
 }
 
 function freeMotionStop(){
@@ -48,46 +72,47 @@ function freeMotionStop(){
 }
 
 function reduceLightLevels(){
-    // var lights = getLights();
+    var lights = lightsObject;
+    var minBright = 60;
     // Send messages to lights
-    // var http = new XMLHttpRequest();
-    // var level1 = (level1 >= 125) ? (lights.light1.state.sat - 10) : 125;
-    // var level2 = (level2 >= 125) ? (lights.light2.state.sat - 10) : 125;
-    // var level3 = (level3 >= 125) ? (lights.light3.state.sat - 10) : 125;
-    var level1 = 255;
-    var level2 = 255;
-    var level3 = 255;
+    
+    var level1 = (lights.light1.state.sat >= minBright) ? (lights.light1.state.sat - 10) : minBright;
+    var level2 = (lights.light2.state.sat >= minBright) ? (lights.light2.state.sat - 10) : minBright;
+    var level3 = (lights.light3.state.sat >= minBright) ? (lights.light3.state.sat - 10) : minBright;
+
     var message1 = '{"on":true, "sat":'+level1+', "bri":'+level1+'}';
     var message2 = '{"on":true, "sat":'+level2+', "bri":'+level2+'}';
     var message3 = '{"on":true, "sat":'+level3+', "bri":'+level3+'}';
    
     // Light 1
-    // var lightsAPIURL1 = ip + "/api/newdeveloper/lights/1/state"; 
-    // http.open("PUT",lightsAPIURL1,true);
-    // http.send(message1);
-    // console.log(message1);
-    console.log("level1:");
-    console.log(level1);
-    putParameter("1", level1, level1, "null", true);
+    var http1 = new XMLHttpRequest();
+    var lightsAPIURL1 = ip + "/api/newdeveloper/lights/1/state"; 
+    http1.open("PUT",lightsAPIURL1,true);
+    http1.send(message1);
+    console.log(message1);
+
+    lightsObject.light1.state.bri = level1;
+    lightsObject.light1.state.sat = level1;
 
     // Light 2
-    // var lightsAPIURL2 = ip + "/api/newdeveloper/lights/2/state"; 
-    // http.open("PUT",lightsAPIURL2,true);
-    // http.send(message2);
-    // console.log(message2);
-    console.log("level2:");
-    console.log(level2);
-    putParameter("2", level2, level2, "null", true);
+    var http2 = new XMLHttpRequest();
+    var lightsAPIURL2 = ip + "/api/newdeveloper/lights/2/state"; 
+    http2.open("PUT",lightsAPIURL2,true);
+    http2.send(message2);
+    console.log(message2);
+
+    lightsObject.light2.state.bri = level2;
+    lightsObject.light2.state.sat = level2;
 
     // Light 3
-    // var lightsAPIURL3 = ip + "/api/newdeveloper/lights/3/state"; 
-    // http.open("PUT",lightsAPIURL3,true);
-    // http.send(message3);
-    // console.log(message3);
-    // putParameter("3", level3, level3, 30000, true);
-    console.log("level3:");
-    console.log(level3);
-    putParameter("3", level3, level3, "null", true);
+    var http3 = new XMLHttpRequest();
+    var lightsAPIURL3 = ip + "/api/newdeveloper/lights/3/state"; 
+    http3.open("PUT",lightsAPIURL3,true);
+    http3.send(message3);
+    console.log(message3);
+
+    lightsObject.light3.state.bri = level3;
+    lightsObject.light3.state.sat = level3;
 }
 
 function captureOrientationFree (event) {
@@ -135,7 +160,7 @@ function captureOrientationFree (event) {
 }
 
 function captureMotionFree() {    
-    var sensitivity = 5;  // m/s2     
+    var sensitivity = 0;  // m/s2     
     x1 = event.accelerationIncludingGravity.x;  
     y1 = event.accelerationIncludingGravity.y;  
     z1 = event.accelerationIncludingGravity.z;        
@@ -173,24 +198,58 @@ function triggerMotionFree(){
         var brightness = range;
         var saturation = range;
 
-        /*
-        console.log("Hue: "+hue);
-        console.log("Brightness: "+brightness);
-        console.log("Saturation: "+saturation);
-        console.log(" --- ");
-        */
-
         // Send messages to lights
-        // var http = new XMLHttpRequest();
-        // var message = '{"on":true, "sat":'+saturation+', "bri":'+brightness+',"hue":'+hue+'}';
+        var message = '{"on":true, "sat":'+saturation+', "bri":'+brightness+',"hue":'+hue+'}';
        
-        if(activeLightInstance > 3) activeLightInstance = 1;
-        // var lightsAPIURL = ip + "/api/newdeveloper/lights/"+activeLightInstance+"/state"; 
-        // http.open("PUT",lightsAPIURL,true);
-        // http.send(message);
-        // console.log(message);
-        putParameter(activeLightInstance.toString(), saturation, brightness, hue, true);
+        if(activeLightInstance > 3){
+            activeLightInstance = 1;
+        }
+
+        var http1 = new XMLHttpRequest();
+        var http2 = new XMLHttpRequest();
+        var http3 = new XMLHttpRequest();
+
+        switch(activeLightInstance){
+            case 1: 
+                    var lightsAPIURL = ip + "/api/newdeveloper/lights/"+activeLightInstance+"/state"; 
+                    http1.open("PUT",lightsAPIURL,true);
+                    http1.send(message);
+                    console.log(message);
+                    lightsObject.light1 = {"state": {
+                                "on": true,
+                                "hue": hue,
+                                "bri": brightness,
+                                "sat": saturation
+                            }};
+                    break;
+            case 2: 
+                    var lightsAPIURL = ip + "/api/newdeveloper/lights/"+activeLightInstance+"/state"; 
+                    http2.open("PUT",lightsAPIURL,true);
+                    http2.send(message);
+                    console.log(message);
+                    lightsObject.light2 = {"state": {
+                                "on": true,
+                                "hue": hue,
+                                "bri": brightness,
+                                "sat": saturation
+                            }};
+                    break;
+            case 3: 
+                    var lightsAPIURL = ip + "/api/newdeveloper/lights/"+activeLightInstance+"/state"; 
+                    http3.open("PUT",lightsAPIURL,true);
+                    http3.send(message);
+                    console.log(message);
+                    lightsObject.light3 = {"state": {
+                                "on": true,
+                                "hue": hue,
+                                "bri": brightness,
+                                "sat": saturation
+                            }};
+                    break;
+        }       
+
         activeLightInstance += 1;
+        
     }
 }
 
@@ -223,44 +282,3 @@ function degreeToHUE(alpha, beta, gamma){
 
     return Math.round(h);
 }
-
-function getLights(){
-    var light1, light2, light3;
-    // for(var i = 1; i <= lightsNumber; i++){
-    //     var lightsAPIURL = ip + "/api/newdeveloper/lights/"+i; 
-    //     var http = new XMLHttpRequest();
-    //     http.open("GET",lightsAPIURL,true);
-    //     http.send();
-    //     // putParameter(i.toString(), saturation, brightness, hue, true);
-
-    //     http.onreadystatechange=function(){
-    //       if (http.readyState==4 && http.status==200){
-    //             switch(i){
-    //                 case 1: light1 = http.responseText; break;
-    //                 case 2: light2 = http.responseText; break;
-    //                 case 3: light3 = http.responseText; break;
-    //             }                
-    //         }
-    //     }
-    // }
-    socket.emit('hue_state', "1", function(data){
-        light1 = data;
-    });
-    
-    socket.emit('hue_state', "2", function(data){
-        light2 = data;
-    });
-    socket.emit('hue_state', "3", function(data){
-        light3 = data;
-    });
-
-    var object = {"light1":light1, "light2":light2, "light3":light3};
-    console.log("getlights state");
-    console.log(object);
-    // lights.light1.state.sat
-    return object;    
-}
-
-
-
-
